@@ -20,7 +20,6 @@ defmodule EblovedWeb.Router do
     live "/", HomeLive
   end
 
-  # Other scopes may use custom stacks.
   scope "/", EblovedWeb do
     pipe_through :api
 
