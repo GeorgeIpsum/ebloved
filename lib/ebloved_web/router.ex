@@ -17,13 +17,15 @@ defmodule EblovedWeb.Router do
   scope "/", EblovedWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", HomeLive
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", EblovedWeb do
-  #   pipe_through :api
-  # end
+  scope "/", EblovedWeb do
+    pipe_through :api
+
+    get "/healthz", HealthController, :show
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:ebloved, :dev_routes) do
