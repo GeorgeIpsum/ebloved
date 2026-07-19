@@ -1,0 +1,12 @@
+[extend]
+useDefault = true
+
+# `mix phx.new` generates a random, non-production `secret_key_base` into
+# config/dev.exs and config/test.exs for local dev/test only. Production
+# requires the SECRET_KEY_BASE env var (see config/runtime.exs), so these
+# scaffold-generated dev/test values are not real secrets.
+[allowlist]
+paths = [
+  '''config/dev\.exs''',
+  '''config/test\.exs''',
+]
