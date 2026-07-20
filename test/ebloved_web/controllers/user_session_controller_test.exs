@@ -13,7 +13,7 @@ defmodule EblovedWeb.UserSessionControllerTest do
       conn = get(conn, ~p"/users/log-in")
       response = html_response(conn, 200)
       assert response =~ "Log in"
-      assert response =~ ~p"/users/register"
+      refute response =~ "/users/register"
       assert response =~ "Log in with email"
     end
 
@@ -36,7 +36,7 @@ defmodule EblovedWeb.UserSessionControllerTest do
       conn = get(conn, ~p"/users/log-in?mode=password")
       response = html_response(conn, 200)
       assert response =~ "Log in"
-      assert response =~ ~p"/users/register"
+      refute response =~ "/users/register"
       assert response =~ "Log in with email"
     end
   end
@@ -147,6 +147,24 @@ defmodule EblovedWeb.UserSessionControllerTest do
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "If your email is in our system"
       assert Ebloved.Repo.get_by!(Accounts.UserToken, user_id: user.id).context == "login"
+    end
+
+    test "does not create a user or send a link for an unknown email (single-owner app)", %{
+      conn: conn
+    } do
+      email = unique_user_email()
+
+      conn =
+        post(conn, ~p"/users/log-in", %{
+          "user" => %{"email" => email}
+        })
+
+      # Same generic response as the "known email" case, to avoid user enumeration.
+      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "If your email is in our system"
+
+      refute get_session(conn, :user_token)
+      refute Accounts.get_user_by_email(email)
+      refute Ebloved.Repo.exists?(Accounts.UserToken)
     end
 
     test "logs the user in", %{conn: conn, user: user} do

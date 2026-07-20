@@ -47,13 +47,10 @@ defmodule EblovedWeb.Router do
   end
 
   ## Authentication routes
-
-  scope "/", EblovedWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
-
-    get "/users/register", UserRegistrationController, :new
-    post "/users/register", UserRegistrationController, :create
-  end
+  #
+  # This is a single-owner app: the owner account is provisioned once, out
+  # of band, and self-registration is intentionally not exposed. Do not
+  # re-add /users/register routes here.
 
   scope "/", EblovedWeb do
     pipe_through [:browser, :require_authenticated_user]
