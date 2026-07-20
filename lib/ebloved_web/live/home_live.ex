@@ -45,5 +45,12 @@ defmodule EblovedWeb.HomeLive do
     end
   rescue
     _ -> @empty_cluster_data
+  catch
+    # GenServer.call/2,3 signals a dead target via exit/1 (e.g.
+    # exit({:noproc, ...})), not a raise, so `rescue` alone does not cover
+    # the race where ClusterData dies between the whereis/1 check above and
+    # the call landing. Catch that exit too so this always degrades to
+    # @empty_cluster_data instead of crashing the LiveView process.
+    :exit, _ -> @empty_cluster_data
   end
 end
