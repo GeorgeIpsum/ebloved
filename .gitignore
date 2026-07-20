@@ -1,3 +1,9 @@
+# Local secrets / credentials — public repo, never commit these.
+.env
+.env.*
+*.pem
+*.key
+
 # The directory Mix will write compiled artifacts to.
 /_build/
 

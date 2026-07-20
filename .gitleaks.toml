@@ -7,6 +7,6 @@ useDefault = true
 # scaffold-generated dev/test values are not real secrets.
 [allowlist]
 paths = [
-  '''config/dev\.exs''',
-  '''config/test\.exs''',
+  '''^config/dev\.exs$''',
+  '''^config/test\.exs$''',
 ]
