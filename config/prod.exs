@@ -30,3 +30,6 @@ config :logger, level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
+
+# prometheus_url is set at runtime from env (see Task 5 / config/runtime.exs).
+config :ebloved, poll_interval_ms: 5_000

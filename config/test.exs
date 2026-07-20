@@ -40,3 +40,10 @@ config :phoenix_live_view,
 # Sort query params output of verified routes for robust url comparisons
 config :phoenix,
   sort_verified_routes_query_params: true
+
+# Never start the cluster data poller under the app supervisor in tests;
+# tests start it explicitly via start_supervised! with a stub fetch_fun.
+config :ebloved,
+  start_poller: false,
+  prometheus_url: "http://localhost:9",
+  poll_interval_ms: 60_000_000

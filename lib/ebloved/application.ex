@@ -7,16 +7,18 @@ defmodule Ebloved.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      EblovedWeb.Telemetry,
-      Ebloved.Repo,
-      {DNSCluster, query: Application.get_env(:ebloved, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: Ebloved.PubSub},
-      # Start a worker by calling: Ebloved.Worker.start_link(arg)
-      # {Ebloved.Worker, arg},
-      # Start to serve requests, typically the last entry
-      EblovedWeb.Endpoint
-    ]
+    children =
+      [
+        EblovedWeb.Telemetry,
+        Ebloved.Repo,
+        {DNSCluster, query: Application.get_env(:ebloved, :dns_cluster_query) || :ignore},
+        {Phoenix.PubSub, name: Ebloved.PubSub}
+      ] ++
+        poller_children() ++
+        [
+          # Start to serve requests, typically the last entry
+          EblovedWeb.Endpoint
+        ]
 
     # See https://elixir.hexdocs.pm/Supervisor.html
     # for other strategies and supported options
@@ -30,5 +32,13 @@ defmodule Ebloved.Application do
   def config_change(changed, _new, removed) do
     EblovedWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp poller_children do
+    if Application.get_env(:ebloved, :start_poller) == false do
+      []
+    else
+      [Ebloved.ClusterData]
+    end
   end
 end
