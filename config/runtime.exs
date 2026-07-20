@@ -74,6 +74,13 @@ if config_env() == :prod do
 
   config :ebloved, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
+  config :ebloved,
+         :prometheus_url,
+         System.get_env(
+           "PROMETHEUS_URL",
+           "http://monitoring-kube-prometheus-prometheus.monitoring:9090"
+         )
+
   config :ebloved, EblovedWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [
